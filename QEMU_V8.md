@@ -49,7 +49,7 @@ cat ~/.ssh/id_rsa.pub
 
 选择github账号的settings -> SSH and GPG keys -> New SSH key。将id_rsa.pub中内容拷贝到Key中，点击 Add SSH key。
 
-![github_setting](D:\workspace\arm_security_technology\pic\github_setting.png)
+![github_setting](.\pic\github_setting.png)
 
 
 
