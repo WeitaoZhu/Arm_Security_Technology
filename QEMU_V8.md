@@ -105,17 +105,39 @@ and try again.
 
 ### 3. 用repo拖取代码
 
+由于repo拉取ATF v2.6与edk2比较慢，改成手动拉取。先将 `./.repo/manifests/`目录中的qemu_v8.xml的文件修改如下：
+
+```diff
+--- a/qemu_v8.xml
++++ b/qemu_v8.xml
+@@ -20,10 +20,10 @@
+ 
+         <!-- Misc gits -->
+         <project path="buildroot"            name="buildroot/buildroot.git"               revision="refs/tags/2021.11" clone-depth="1" />
+-        <project path="edk2"                 name="tianocore/edk2.git"                    revision="refs/tags/edk2-stable202202" sync-s="true" />
++        <!-- project path="edk2"                 name="tianocore/edk2.git"                    revision="refs/tags/edk2-stable202202" sync-s="true" />-->
+         <project path="mbedtls"              name="Mbed-TLS/mbedtls.git"                   revision="refs/tags/mbedtls-2.26.0" clone-depth="1" />
+         <project path="optee_rust"           name="apache/incubator-teaclave-trustzone-sdk.git"            revision="3272b38b013395e3376a38af6315633239d26c1c" />
+         <project path="qemu"                 name="qemu/qemu.git"                         revision="refs/tags/v7.0.0" clone-depth="1" />
+-        <project path="trusted-firmware-a"   name="TF-A/trusted-firmware-a.git"           revision="refs/tags/v2.6" clone-depth="1" remote="tfo" />
++        <!-- project path="trusted-firmware-a"   name="TF-A/trusted-firmware-a.git"           revision="refs/tags/v2.6" clone-depth="1" remote="tfo" />-->
+         <project path="u-boot"               name="u-boot.git"                            revision="refs/tags/v2021.04" remote="u-boot" clone-depth="1" />
+ </manifest>
+```
+
+用repo自动拉取ATF v2.6与edk2之外其他的代码
+
 ```shell
 $ repo sync -j8
 ```
 
-拉取ATF v2.6代码
+手动拉取ATF v2.6代码
 
 ```shell
 git clone  --branch v2.6 https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git
 ```
 
-拉取edk2代码
+手动拉取edk2代码
 
 ```shell
 git clone  --branch edk2-stable202105 git://github.com/tianocore/edk2.git
