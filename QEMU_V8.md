@@ -6,11 +6,7 @@
 
 先安装一下Virtualbox+Ubuntu20.04,可以参考[[How TO\]-图解virtualbox下安装ubuntu20.04虚拟机](https://blog.csdn.net/weixin_42135087/article/details/112437377)
 
-
-
-## 安装Ubuntu基础工具
-
-
+### 安装Ubuntu基础工具
 
 ```shell
 sudo apt-get install samba smbclient git make expect vim net-tools python3-pip python2.7 binfmt-support qemu qemu-user-static openssl
@@ -61,6 +57,8 @@ git config --global user.name "Weston.Zhu"
 ```
 
 
+
+## 安装OP-TEE
 
 ### 1. 安装编译OP-TEE的工具
 
@@ -223,5 +221,10 @@ make -f qemu_v8.mk all -j8
 make -f qemu_v8.mk run-only
 ```
 
-敲完命令运行后，记得继续按c然后按回车健，接下来会弹出两个窗口，一个是CA（Linux）串口，一个是TA（OP-TEE）串口。
+敲完命令运行后，记得继续按c然后按回车健。
 
+![qemu_v8_optee](.\pic\qemu_v8_optee.png)
+
+接下来会弹出两个窗口，一个是CA（Linux）窗口，一个是TA（OP-TEE）窗口。
+
+![TF-A_v2.6_OPTEE_v3.17.0](.\pic\TF-A_v2.6_OPTEE_v3.17.0.png)
