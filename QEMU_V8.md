@@ -250,3 +250,4 @@ make -f qemu_v8.mk run-only
 接下来会弹出两个窗口，一个是CA（Linux）窗口，一个是TA（OP-TEE）窗口。
 
 ![TF-A_v2.6_OPTEE_v3.17.0](.\pic\TF-A_v2.6_OPTEE_v3.17.0.png)
+
