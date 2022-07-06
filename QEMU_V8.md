@@ -29,10 +29,10 @@ sudo /etc/init.d/apache2 restart
 安装repo
 
 ```shell
-git clone https://gerrit-googlesource.lug.ustc.edu.cn/git-repo
+git clone http://10.40.9.96/clourneysemi/git-repo.git
 cd git-repo/
-cp repo ~/bin/
-chmod a+x ~/bin/repo 
+cp repo /bin/
+sudo chmod a+x /bin/repo 
 ```
 
 配置github SSH Key
@@ -43,7 +43,7 @@ ssh-keygen -t rsa -C "weitao.zhu@aliyun.com"
 cat ~/.ssh/id_rsa.pub 
 ```
 
-选择github账号的settings -> SSH and GPG keys -> New SSH key。将id_rsa.pub中内容拷贝到Key中，点击 Add SSH key。
+选择gitlab账号的 -> User Settings -> SSH key。将id_rsa.pub中内容拷贝到Key中，点击 Add key。
 
 ![github_setting](.\pic\github_setting.png)
 
@@ -51,9 +51,25 @@ cat ~/.ssh/id_rsa.pub
 
 配置git
 
-```shell
-git config --global user.email "weitao.zhu@aliyun.com"
-git config --global user.name "Weston.Zhu"
+```bash
+git config --global user.email "wez057@clourneysemi.com"
+git config --global user.name "Weston"
+```
+
+输入命令
+
+```bash
+git config --global credential.helper store
+```
+
+这一步会在用户目录下的.gitconfig文件最后添加：
+
+push代码
+这一步会在用户目录下生成文件.git-credential记录用户名密码的信息
+格式：
+
+```bash
+https:{username}:{password}@github.com
 ```
 
 
@@ -78,26 +94,35 @@ $ sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
 ### 2. 更新对应QEMU V8的optee代码
 
 ```shell
-$ repo init -u git@github.com:OP-TEE/manifest.git -m qemu_v8.xml --repo-url=https://mirrors.tuna.tsinghua.edu.cn/git/git-repo -b 3.17.0
-Downloading Repo source from https://mirrors.tuna.tsinghua.edu.cn/git/git-repo
+$ repo init --no-clone-bundle -u http://10.40.9.96/clourneysemi/op-tee/manifest.git -m qemu_v8.xml --repo-url=http://10.40.9.96/clourneysemi/git-repo.git -b 3.17.0-clourney
+
+Downloading Repo source from http://10.40.9.96/clourneysemi/git-repo.git
 remote: Enumerating objects: 7372, done.
 remote: Counting objects: 100% (7372/7372), done.
-remote: Compressing objects: 100% (3935/3935), done.
-remote: Total 7372 (delta 4764), reused 5577 (delta 3363)
-Receiving objects: 100% (7372/7372), 3.28 MiB | 4.17 MiB/s, done.
-Resolving deltas: 100% (4764/4764), done.
-Downloading manifest from git@github.com:OP-TEE/manifest.git
-remote: Enumerating objects: 1411, done.
-remote: Counting objects: 100% (241/241), done.
-remote: Compressing objects: 100% (80/80), done.
-remote: Total 1411 (delta 184), reused 177 (delta 161), pack-reused 1170
+remote: Compressing objects: 100% (3331/3331), done.
+remote: Total 7372 (delta 3971), reused 7372 (delta 3971), pack-reused 0
+Receiving objects: 100% (7372/7372), 6.65 MiB | 25.49 MiB/s, done.
+Resolving deltas: 100% (3971/3971), done.
+repo: Updating release signing keys to keyset ver 2.3
+Downloading manifest from http://10.40.9.96/clourneysemi/op-tee/manifest.git
+remote: Enumerating objects: 1392, done.
+remote: Counting objects: 100% (1392/1392), done.
+remote: Compressing objects: 100% (357/357), done.
+remote: Total 1392 (delta 1037), reused 1389 (delta 1034), pack-reused 0
+Receiving objects: 100% (1392/1392), 286.50 KiB | 17.91 MiB/s, done.
+Resolving deltas: 100% (1037/1037), done.
 
-Your identity is: Weston.Zhu <weitao.zhu@aliyun.com>
+Your identity is: Weston <wez057@clourneysemi.com>
 If you want to change this, please re-run 'repo init' with --config-name
 
-repo has been initialized in /home/weston/workspace/optee-3.17/
+Testing colorized output (for 'repo diff', 'repo status'):
+  black    red      green    yellow   blue     magenta   cyan     white 
+  bold     dim      ul       reverse 
+Enable color display in this user account (y/N)? y
+
+repo has been initialized in /home/weston/workspace/optee-atf-armv8/
 If this is not the directory in which you want to initialize repo, please run:
-   rm -r /home/weston/workspace/optee-3.17//.repo
+   rm -r /home/weston/workspace/optee-atf-armv8//.repo
 and try again.
 ```
 
@@ -105,131 +130,22 @@ and try again.
 
 ### 3. 用repo拖取代码
 
-由于repo拉取ATF v2.6与edk2比较慢，改成手动拉取。先将 `./.repo/manifests/`目录中的qemu_v8.xml的文件修改如下：
-
-```diff
---- a/qemu_v8.xml
-+++ b/qemu_v8.xml
-@@ -20,10 +20,10 @@
- 
-         <!-- Misc gits -->
-         <project path="buildroot"            name="buildroot/buildroot.git"               revision="refs/tags/2021.11" clone-depth="1" />
--        <project path="edk2"                 name="tianocore/edk2.git"                    revision="refs/tags/edk2-stable202202" sync-s="true" />
-+        <!-- project path="edk2"                 name="tianocore/edk2.git"                    revision="refs/tags/edk2-stable202202" sync-s="true" />-->
-         <project path="mbedtls"              name="Mbed-TLS/mbedtls.git"                   revision="refs/tags/mbedtls-2.26.0" clone-depth="1" />
-         <project path="optee_rust"           name="apache/incubator-teaclave-trustzone-sdk.git"            revision="3272b38b013395e3376a38af6315633239d26c1c" />
-         <project path="qemu"                 name="qemu/qemu.git"                         revision="refs/tags/v7.0.0" clone-depth="1" />
--        <project path="trusted-firmware-a"   name="TF-A/trusted-firmware-a.git"           revision="refs/tags/v2.6" clone-depth="1" remote="tfo" />
-+        <!-- project path="trusted-firmware-a"   name="TF-A/trusted-firmware-a.git"           revision="refs/tags/v2.6" clone-depth="1" remote="tfo" />-->
-         <project path="u-boot"               name="u-boot.git"                            revision="refs/tags/v2021.04" remote="u-boot" clone-depth="1" />
- </manifest>
-```
-
-用repo自动拉取ATF v2.6与edk2之外其他的代码
-
 ```shell
-$ repo sync -j8
-```
-
-手动拉取ATF v2.6代码
-
-```shell
-git clone  --branch v2.6 https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git
-```
-
-手动拉取edk2代码
-
-```shell
-git clone  --branch edk2-stable202105 git://github.com/tianocore/edk2.git
-cd edk2/
-git submodule sync
-git submodule update --init
+$ repo sync --no-clone-bundle -j8
+Fetching: 100% (14/14), done in 1m51.471s
+Garbage collecting: 100% (14/14), done in 0.118s
+Updating files: 100% (75032/75032), done.
+Updating files: 100% (11690/11690), done.
+Updating files: 100% (17747/17747), done.
+Checking out: 100% (14/14), done in 38.045s
+repo sync has finished successfully.
 ```
 
 
 
-### 4. 下载arm gcc交叉编译工具
+### 4. 编译
 
-```shell
-cd build
-make -f toolchain.mk toolchains
-```
-
-或者直接用wget下载gnu-a gcc交叉编译工具 [gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz?revision=d0b90559-3960-4e4b-9297-7ddbc3e52783&hash=764D949F016397C3B36F225171E9AF38) 和 [gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz?revision=972019b5-912f-4ae6-864a-f61f570e2e7e&hash=74219244C01160EEB09BEF438884830E) 并拷贝到toolchains目录下。
-
-```shell
-mkdir toolchains
-cd toolchains
-wget https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz
-wget https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz
-
-mkdir  aarch32
-mkdir  aarch64
-tar xf gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz -C aarch32 --strip-components=1
-tar xf gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz -C aarch64 --strip-components=1
-
-cd aarch32/bin
-for f in $(ls);do ln -s $f ${f//-none};done;
-cd -
-cd aarch64/bin
-for f in $(ls);do ln -s $f ${f//-none};done;
-cd -
-
-```
-
-
-
-### 5. 编译
-
-修改EDK2替换成U-Boot启动
-
-```diff
-diff --git a/qemu_v8.mk b/qemu_v8.mk
-index c98e460..72860b2 100644
---- a/qemu_v8.mk
-+++ b/qemu_v8.mk
-@@ -11,7 +11,7 @@ COMPILE_S_KERNEL ?= 64
- ################################################################################
- # If you change this, you MUST run `make arm-tf-clean` first before rebuilding
- ################################################################################
--TF_A_TRUSTED_BOARD_BOOT ?= n
-+TF_A_TRUSTED_BOARD_BOOT ?= y
- 
- BR2_ROOTFS_OVERLAY = $(ROOT)/build/br-ext/board/qemu/overlay
- BR2_ROOTFS_POST_BUILD_SCRIPT = $(ROOT)/build/br-ext/board/qemu/post-build.sh
-@@ -35,7 +35,7 @@ include common.mk
- DEBUG ?= 1
- 
- # Option to use U-Boot in the boot flow instead of EDK2
--UBOOT ?= n
-+UBOOT ?= y
- 
- # Option to build with GICV3 enabled
- GICV3 ?= y
-@@ -146,7 +146,7 @@ TF_A_EXPORTS ?= \
- 
- TF_A_DEBUG ?= $(DEBUG)
- ifeq ($(TF_A_DEBUG),0)
--TF_A_LOGLVL ?= 30
-+TF_A_LOGLVL ?= 40
- TF_A_OUT = $(TF_A_PATH)/build/qemu/release
- else
- TF_A_LOGLVL ?= 50
-@@ -423,9 +423,9 @@ QEMU_VIRT   = true
- QEMU_XEN       ?= -drive if=none,file=$(XEN_EXT4),format=raw,id=hd1 \
-                   -device virtio-blk-device,drive=hd1
- else
--QEMU_CPU       ?= max,sve=off
--QEMU_SMP       ?= 2
--QEMU_MEM       ?= 1057
-+QEMU_CPU       ?= cortex-a53
-+QEMU_SMP       ?= 4
-+QEMU_MEM       ?= 2048
- QEMU_VIRT      = false
- endif
-```
-
-开始编译
+在build目录下开始编译
 
 ```shell
 make -f qemu_v8.mk all -j8
@@ -237,7 +153,9 @@ make -f qemu_v8.mk all -j8
 
 
 
-### 6. 运行
+### 5. 运行
+
+在build目录下运行
 
 ```shell
 make -f qemu_v8.mk run-only
