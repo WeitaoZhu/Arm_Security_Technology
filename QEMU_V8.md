@@ -31,8 +31,8 @@ sudo /etc/init.d/apache2 restart
 ```shell
 git clone http://10.40.9.96/clourneysemi/git-repo.git
 cd git-repo/
-cp repo /bin/
-sudo chmod a+x /bin/repo 
+sudo cp repo /usr/bin/
+sudo chmod a+x /usr/bin/repo 
 ```
 
 配置github SSH Key
@@ -94,7 +94,7 @@ $ sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
 ### 2. 更新对应QEMU V8的optee代码
 
 ```shell
-$ repo init --no-clone-bundle -u http://10.40.9.96/clourneysemi/op-tee/manifest.git -m qemu_v8.xml --repo-url=http://10.40.9.96/clourneysemi/git-repo.git -b 3.17.0-clourney
+$ repo init --no-clone-bundle -u http://192.168.3.31/clourneysemi/op-tee/manifest.git -m qemu_v8.xml --repo-url=http://192.168.3.31/clourneysemi/git-repo.git -b 3.17.0-clourney
 
 Downloading Repo source from http://10.40.9.96/clourneysemi/git-repo.git
 remote: Enumerating objects: 7372, done.
